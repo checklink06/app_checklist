@@ -1,0 +1,13 @@
+.mySwiper {
+  width: 100%;
+}
+
+.swiper-card {
+  width: auto;
+}
+
+@media (max-width: 768px) {
+  .swiper-card > div {
+    width: 180px !important;
+  }
+}
