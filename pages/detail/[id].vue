@@ -18,6 +18,7 @@
   const i18n = useI18n();
   const { brandName, authHost } = useRuntimeConfig().public;
   const isLoading = ref(false);
+  const isSearchingSingle = ref(false);
   // Meta
   definePageMeta({
     layout: 'dashboard-layout'
@@ -114,15 +115,21 @@
     );
 
   async function onSearchLinks() {
+    isSearchingSingle.value = false;
     page = 1;
     await refreshSearch();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function onChangeTablePage(value: { page: number; size: number }) {
+    if (isSearchingSingle.value) {
+      return;
+    }
     page = value.page;
     size = value.size;
     await refreshSearch();
     const { ispList, rows } = pivotISP(domainLists.value.items);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function pivotISP(items) {
@@ -206,15 +213,19 @@
   }
 
   async function onSearchDomain(domain) {
+    isSearchingSingle.value = true;
     isLoading.value = true
+    page = 1;
+    domainLists.value.total = 1;
     const { data: dataSearch, error: errorSearch } = await useAsyncData(() =>
       $fetch(authHost + 'api/links/check?url=' + domain));
     var data = [];
     if (dataSearch.value) {
       data.push(dataSearch.value)
-      const { ispList, rows } = pivotISP(data);
+      const { ispList: isps, rows } = pivotISP(data);
+      ispList.value = isps;
       pivotRows.value = rows;
-      domainLists.value.total = 1
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
     isLoading.value = false
   }

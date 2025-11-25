@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref, computed } from "vue";
   import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
-
+  const { isMobile } = useDevice();
   const emit = defineEmits(["search"]);
 
   // text hiển thị trong input
@@ -148,10 +148,10 @@
                placeholder="Tìm nhanh domain..." />
 
         <!-- BUTTON SEARCH (chỉ desktop) -->
-        <button @click="onSearchClick"
-                class="hidden md:px-4 md:py-1.5 md:bg-blue-600 md:hover:bg-blue-700
-         md:text-white md:font-medium md:rounded-full md:transition
-         md:text-base md:whitespace-nowrap">
+        <button v-if="!isMobile"
+                @click="onSearchClick"
+                class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white
+         font-medium rounded-full transition text-sm md:text-base whitespace-nowrap">
           Tìm kiếm
         </button>
       </div>
